@@ -77,7 +77,7 @@ const CartContainer = () => {
       {cartItems.length > 0 ? (
         <div className="w-full h-full bg-slate-900 flex flex-col">
           {/* all cart item */}
-          <div className="w-full h-340 md:h-42 px-6 py-4 flex flex-col overflow-y-scroll scrollbar-none ">
+          <div className="w-full px-6 py-4 flex flex-col overflow-y-scroll scrollbar-none ">
             {/* every cart item */}
             {cartItems &&
               cartItems.map((item) => (
@@ -90,7 +90,7 @@ const CartContainer = () => {
               ))}
           </div>
           {/*cart total section */}
-          <div className="w-full flex-1 bg-slate-700 rounded-t-[2rem] flex flex-col items-center justify-center px-8">
+          <div className="w-full flex-1 bg-slate-700 rounded-t-[2rem] flex flex-col items-center justify-center px-8 py-16">
             <div className="w-full flex items-center justify-between">
               <p className="text-gray-300 text-lg">Sub Total</p>
               <p className="text-gray-300 text-lg"> {tot}</p>
