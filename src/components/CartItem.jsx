@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { BiMinus, BiPlus } from "react-icons/bi";
 import { actionType } from "../context/reducer";
 import { useGlobalState } from "../context/stateProvider";
@@ -22,6 +22,7 @@ const CartItem = ({ item, flag, setFlag }) => {
           item.qty += 1;
           setFlag(flag + 1);
         }
+        return item;
       });
       CartDispatch();
     } else {
@@ -37,15 +38,13 @@ const CartItem = ({ item, flag, setFlag }) => {
             item.qty -= 1;
             setFlag(qty + 1);
           }
+          return item;
         });
         CartDispatch();
       }
     }
   };
 
-  useEffect(() => {
-    items = cartItems;
-  }, [qty, items]); //
   return (
     <div
       key={item.id}
