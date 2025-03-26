@@ -1,82 +1,60 @@
-import { motion } from "framer-motion";
-import React, { useEffect, useState } from "react";
-import { MdShoppingBasket } from "react-icons/md";
+import React, { useEffect, useState, useMemo } from "react";
 import SearchForm from "../components/SearchForm";
 import { actionType } from "../context/reducer";
 import { useGlobalState } from "../context/stateProvider";
 import NotFound from "../img/NotFound.svg";
+import { debounce } from "lodash";
+import FoodCard from "../components/FoodCard";
+
 const Menu = () => {
-  const [{ foodItems, cartItems, searchItem, cartShow }, dispatch] =
-    useGlobalState();
-  let searchEl = searchItem;
-  const [items, setItems] = useState([]);
-  console.log(items);
-  const addToCart = () => {
-    dispatch({
-      type: actionType.SET_CARTITEMS,
-      cartItems: items,
-    });
-    localStorage.setItem("cartItems", JSON.stringify(items));
-  };
+  const [{ foodItems, searchItem, cartShow }, dispatch] = useGlobalState();
+  const [filteredItems, setFilteredItems] = useState([]);
+
+  // Function to toggle cart visibility
   const showCart = () => {
     dispatch({
       type: actionType.SET_CART_SHOW,
       cartShow: !cartShow,
     });
   };
+
+  // Debounced search function (500ms delay)
+  const debouncedSearch = useMemo(
+    () =>
+      debounce((query) => {
+        if (!query) {
+          // Show top 10 items if input is empty
+          setFilteredItems(foodItems?.slice(0, 10) || []);
+        } else {
+          // Perform case-insensitive search
+          const results = foodItems?.filter((el) =>
+            el.title.toLowerCase().includes(query.toLowerCase())
+          );
+          setFilteredItems(results || []);
+        }
+      }, 500),
+    [foodItems]
+  );
+
+  // Trigger search effect whenever searchItem changes
   useEffect(() => {
-    addToCart();
-  }, [items]);
+    debouncedSearch(searchItem);
+  }, [searchItem, foodItems, debouncedSearch]);
+
   return (
-    <div className="w-full flex flex-wrap">
-      <SearchForm searchItem={searchItem} />
-      {foodItems ? (
-        foodItems
-          .filter((el) => el.title === searchEl)
-          .map((item) => {
-            const { id, price, imageURL, title } = item;
-            return (
-              <div
-                key={id}
-                className="w-350 min-w-[300px] md:min-w-[380px] md:my-10  backdrop-blur-lg mx-1 my-2 lg:mx-2 flex items-center "
-              >
-                <div className="w-full flex flex-row items-center justify-between bg-white rounded-lg drop-shadow-lg py-2 px-4 hover:bg-whiteAlpha min-h-[150px]">
-                  <motion.img
-                    whileHover={{ scale: 1.2 }}
-                    src={imageURL}
-                    alt="img"
-                    className="w-30 max-h-40 -mt-8 duration-100  drop-shadow-2xl"
-                  />
-                  <div className="flex flex-col items-end justify-end gap-4">
-                    <motion.div
-                      whileTap={{ scale: 0.75 }}
-                      className="w-8 h-8 rounded-md bg-orange-500 hover:bg-orange-600 "
-                      onClick={() => setItems([...new Set(cartItems), item])}
-                    >
-                      <MdShoppingBasket
-                        className="text-white text-2xl m-1"
-                        onClick={showCart}
-                      />
-                    </motion.div>
-                    <div className=" w-full">
-                      <p className="text-gray-800 md:text-lg text-base text-right">
-                        {title}
-                      </p>
-                      <p className="text-sm text-gray-500 text-right">
-                        <span className="text-orange-600">$</span> {price}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            );
-          })
-      ) : (
-        <div className="w-full flex flex-col items-center justify-center">
-          <img src={NotFound} className="h-340" alt="" />
-          <p className="text-center my-2 text-xl text-red-500">No data found</p>
-        </div>
-      )}
+    <div className="w-full flex flex-col">
+      <SearchForm />
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 px-4 mt-6">
+        {filteredItems.length > 0 ? (
+          filteredItems.map((item) => <FoodCard key={item.id} item={item} showCart={showCart} />)
+        ) : (
+          <div className="w-full flex flex-col items-center justify-center col-span-full">
+            <img src={NotFound} className="h-340" alt="Not Found" />
+            <p className="text-center my-2 text-xl text-red-500">No data found</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

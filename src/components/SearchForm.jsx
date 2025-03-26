@@ -1,46 +1,59 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { actionType } from "../context/reducer";
 import { useGlobalState } from "../context/stateProvider";
+import { debounce } from "lodash"; // Import lodash debounce for better performance
 
 const SearchForm = () => {
   const [, dispatch] = useGlobalState();
+  const [query, setQuery] = useState(""); // Local state for search query
   const searchValue = useRef("");
-  function searchMeal(e) {
+
+  // Debounced search function
+  const debouncedSearch = debounce((searchText) => {
     dispatch({
       type: actionType.SET_SEARCH_ITEM,
-      searchItem: e.target.value,
+      searchItem: searchText.toLowerCase(),
     });
-  }
+  }, 500); // 500ms delay
+
+  // Handle input change with debounce
+  const handleSearchChange = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+    debouncedSearch(value);
+  };
+
+  // Prevent default form submission
   const handleSubmit = (e) => {
     e.preventDefault();
   };
+
+  // Auto-focus input on mount
   useEffect(() => {
-    searchValue.current.focus(); //result will be changed when values of input change
-  });
+    searchValue.current.focus();
+  }, []);
+
   return (
-    <section className="flex items-center justify-center my-6 w-full h-20 py-8 ">
-      <form className="" onSubmit={handleSubmit}>
-        <div className="py-4 flex gap-2 flex-row bg-orange-500 px-8 rounded-md ">
-          <label htmlFor="name" className="text-sm text-white w-[50%] ">
-            Search your food item
+    <section className="flex items-center justify-center my-6 w-full h-20 py-8">
+      <form onSubmit={handleSubmit} className="w-full max-w-md">
+        <div className="flex items-center bg-orange-500 px-6 py-3 rounded-lg shadow-md">
+          <label htmlFor="search" className="text-white text-sm font-semibold mr-3">
+            Search:
           </label>
-          <div className="flex flex-col items-center justify-center">
-            <input
-              className="appearance-none rounded-sm border-none w-full text-gray-700 px-2"
-              type="text"
-              name="name"
-              id="name"
-              placeholder="Banana"
-              ref={searchValue}
-              onChange={searchMeal}
-            />
-            <span className="text-gray-300 text-xs mt-2">
-              First Letter capital
-            </span>
-          </div>
+          <input
+            className="flex-1 p-2 rounded-md border-none outline-none text-gray-900"
+            type="text"
+            name="search"
+            id="search"
+            placeholder="Search food..."
+            ref={searchValue}
+            value={query}
+            onChange={handleSearchChange}
+          />
         </div>
       </form>
     </section>
   );
 };
+
 export default SearchForm;

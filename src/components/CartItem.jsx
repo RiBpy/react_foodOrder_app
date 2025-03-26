@@ -49,7 +49,7 @@ const CartItem = ({ item, flag, setFlag }) => {
   return (
     <div
       key={item.id}
-      className="w-full gap-4  px-2 rounded-sm flex items-center justify-between bg-slate-700 "
+      className="w-full gap-4  px-2 flex items-center justify-between bg-slate-700 rounded-md mb-1"
     >
       <img
         src={item?.imageURL}
