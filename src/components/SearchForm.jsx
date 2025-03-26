@@ -1,11 +1,11 @@
+import { debounce } from "lodash";
 import React, { useEffect, useState, useRef } from "react";
 import { actionType } from "../context/reducer";
 import { useGlobalState } from "../context/stateProvider";
-import { debounce } from "lodash"; // Import lodash debounce for better performance
 
 const SearchForm = () => {
   const [, dispatch] = useGlobalState();
-  const [query, setQuery] = useState(""); // Local state for search query
+  const [query, setQuery] = useState("");
   const searchValue = useRef("");
 
   // Debounced search function

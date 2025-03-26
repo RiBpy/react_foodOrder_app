@@ -1,7 +1,7 @@
 import React from "react";
 const Loader = () => {
   return (
-    <div role="status">
+    <div role="status" className="flex justify-center items-center min-h-[20vh]">
       <svg
         className="inline mr-2 w-10 h-10 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
         viewBox="0 0 100 101"

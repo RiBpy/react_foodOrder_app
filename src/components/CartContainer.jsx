@@ -29,12 +29,36 @@ const CartContainer = () => {
     }, 0); //initial value of acc=0
     setTot(totalPrice);
   }, [tot, flag, cartItems]); //
+
+  // hide card on outside click
+  useEffect(() => {
+    const hideCart = (event) => {
+      const cartContainer = document.querySelector(".cart-container");
+      const cartIcon = document.querySelector(".cart-icon");
+      if (
+        cartContainer &&
+        !cartContainer.contains(event.target) &&
+        cartIcon &&
+        !cartIcon.contains(event.target)
+      ) {
+        dispatch({
+          type: actionType.SET_CART_SHOW,
+          cartShow: false,
+        });
+      }
+    };
+    window.addEventListener("click", hideCart);
+    return () => {
+      window.removeEventListener("click", hideCart);
+    };
+  }, [dispatch]);
+
   return (
     <motion.div
       initial={{ opacity: 0, x: 300 }}
       animate={{ opacity: 1, x: 1 }}
       exit={{ opacity: 0, x: 300 }}
-      className="w-full fixed z-[101] bg-white md:w-350 h-screen top-0 right-0"
+      className="w-full fixed z-[101] bg-white md:w-350 h-screen top-0 right-0 cart-container"
     >
       <div className="w-full flex items-center justify-between p-4 cursor-pointer bg-gradient-to-tr from-orange-400 to-orange-600">
         <motion.div whileTap={{ scale: 0.77 }} onClick={showCart}>

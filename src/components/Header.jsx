@@ -106,7 +106,7 @@ const Header = () => {
             </li>
           </motion.ul>
           <div
-            className="relative flex items-center justify-center"
+            className="relative flex items-center justify-center cart-icon"
             onClick={showCart}
           >
             <MdShoppingBasket className="text-textColor text-2xl cursor-pointer hover:scale-110 hover:text-activeText" />

@@ -7,7 +7,8 @@ const initialState={
     foodItems:null,
     cartShow:false,
     cartItems:cartInfo,
-    searchItem:"Banana",
+    searchItem:"",
+    loading:true,
 }
 const actionType={
     SET_USER:"SET_USER",
@@ -15,6 +16,7 @@ const actionType={
     SET_CART_SHOW:"SET_CART_SHOW",
     SET_CARTITEMS:"SET_CARTITEMS",
     SET_SEARCH_ITEM:"SET_SEARCH_ITEM",
+    SET_LOADING:"SET_LOADING",
 }
 
 const reducer=(state,action)=>{
@@ -24,6 +26,7 @@ const reducer=(state,action)=>{
         case actionType.SET_CART_SHOW:return{...state,cartShow:action.cartShow};
         case actionType.SET_CARTITEMS:return{...state,cartItems:action.cartItems};
         case actionType.SET_SEARCH_ITEM:return{...state,searchItem:action.searchItem};
+        case actionType.SET_LOADING:return{...state,loading:action.loading};
             default:return state;
     }
 }

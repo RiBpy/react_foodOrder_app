@@ -8,18 +8,22 @@ import Menu from "./pages/Menu";
 import { getAllData } from "./utils/firebaseFunctions";
 const App = () => {
   const [{cartShow}, dispatch] = useGlobalState();
-  const fetchAllData = async () => {
-    await getAllData().then((data) => {
-      dispatch({
-        type: actionType.SET_FOOD_ITEMS,
-        foodItems: data,
-      });
-    });
-  };
 
   useEffect(() => {
+    const fetchAllData = async () => {
+      await getAllData().then((data) => {
+        dispatch({
+          type: actionType.SET_FOOD_ITEMS,
+          foodItems: data,
+        });
+        dispatch({
+          type: actionType.SET_LOADING,
+          loading: false,
+        });
+      });
+    };
     fetchAllData();
-  });
+  }, [dispatch]);
 
   return (
     <AnimatePresence mode="wait">
