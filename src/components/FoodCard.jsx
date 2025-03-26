@@ -4,7 +4,7 @@ import { actionType } from "../context/reducer";
 import { MdShoppingBasket } from "react-icons/md";
 import { motion } from "framer-motion";
 
-const FoodCard = ({ item, showCart }) => {
+const FoodCard = ({ item }) => {
   const [{ cartItems }, dispatch] = useGlobalState();
 
   const addToCart = () => {
@@ -31,10 +31,7 @@ const FoodCard = ({ item, showCart }) => {
       <motion.button
         whileTap={{ scale: 0.9 }}
         className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-md flex items-center mt-3"
-        onClick={() => {
-          addToCart();
-          showCart();
-        }}
+        onClick={() => addToCart()}
       >
         <MdShoppingBasket className="mr-2" />
         Add to Cart

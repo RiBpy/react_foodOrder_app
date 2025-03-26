@@ -26,6 +26,14 @@ const Header = () => {
   const [{ user, cartShow, cartItems }, dispatch] = useGlobalState();
   const [isMenu, setIsMenu] = useState(false);
   const [isMobileMenu, setMobileMenu] = useState();
+
+  const showCart = () => {
+    dispatch({
+      type: actionType.SET_CART_SHOW,
+      cartShow: !cartShow,
+    });
+  };
+
   const login = async () => {
     if (!user) {
       const { user } = await signInWithPopup(firebaseAuth, provider);
@@ -39,12 +47,7 @@ const Header = () => {
       setIsMenu(!isMenu);
     }
   };
-  const showCart = () => {
-    dispatch({
-      type: actionType.SET_CART_SHOW,
-      cartShow: !cartShow,
-    });
-  };
+
   const logout = () => {
     setIsMenu(false);
     localStorage.clear();
@@ -54,6 +57,7 @@ const Header = () => {
     });
     navigate("/", { replace: true });
   };
+  
   const mobileMenu = () => {
     setMobileMenu(!isMobileMenu);
   };

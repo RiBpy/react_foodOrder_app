@@ -1,13 +1,13 @@
 import { AnimatePresence } from "framer-motion";
 import React, { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-import { CreateContainer, Footer, Header, MainContainer } from "./components";
+import { CartContainer, CreateContainer, Footer, Header, MainContainer } from "./components";
 import { actionType } from "./context/reducer";
 import { useGlobalState } from "./context/stateProvider";
 import Menu from "./pages/Menu";
 import { getAllData } from "./utils/firebaseFunctions";
 const App = () => {
-  const [, dispatch] = useGlobalState();
+  const [{cartShow}, dispatch] = useGlobalState();
   const fetchAllData = async () => {
     await getAllData().then((data) => {
       dispatch({
@@ -33,6 +33,7 @@ const App = () => {
           </Routes>
         </main>
         <Footer />
+        {cartShow && <CartContainer />}
       </div>
     </AnimatePresence>
   );
